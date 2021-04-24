@@ -43,57 +43,64 @@ class Maze:
         Raises:
             ValueError: If the starting position is out of range or not walkable path.
         """
-        if start_x > len(self._maze) - 1 or start_y > len(self._maze[0]) - 1:
-            if '#' == self._maze[start_x][start_y]:
-                if depth == 0:
-                    raise ValueError
-                else:
-                    return False
-        if '#' == self._maze[start_x][start_y]:
+        # Starting position out of range
+        if start_x > len(self._maze) - 1 or start_y > len(self._maze[0]) - 1 or start_y < 0 or start_x < 0:
+            if depth == 0:
+                raise ValueError
+            else:
+                return False
+
+        # Position is obstacle
+        if self._maze[start_x][start_y] == OBSTACLE:
             if depth == 0:
                 raise ValueError
             else:
                 return False
 
         if depth == 0:
-            # in the beginning, mark starts
+            # at the beginning, mark START
             self._maze[start_x][start_y] = START
             # CASE: start is exit
             if (start_y == 0 or start_y == len(self._maze[0]) - 1 or
-                    start_x == 0 or start_x == len(self._maze) - 1):
+                    start_x == 0 or start_x == len(self._maze) - 1):  # if true, we are at the edge of the maze --> exit
                 if self._maze[start_x][start_y] == START:
                     self._exits.append((start_x, start_y))
                     self._maze[start_x][start_y] = EXIT
 
-        depth += 1
+        depth += 1  # increase current depth
         if depth > self._max_recursion_depth:
             self._max_recursion_depth = depth
-        # if len(self._maze)-1 < start_x or len(self._maze[0])-1 < start_y:
-        #   return False
 
         # CASE: Starting position is EXIT
-        # can only be happen for one position
+        # --> try to get out; moving into all directions
+        # can only happen for one position
         if self._maze[start_x][start_y] == EXIT and depth == 1:
             if self.find_exits(start_x - 1, start_y, depth):  # NORTH
                 return True
-            elif self.find_exits(start_x + 1, start_y, depth):
+            elif self.find_exits(start_x + 1, start_y, depth):  # SOUTH
                 return True
-            elif self.find_exits(start_x, start_y - 1, depth):
+            elif self.find_exits(start_x, start_y - 1, depth):  # WEST
                 return True
-            elif self.find_exits(start_x, start_y + 1, depth):
+            elif self.find_exits(start_x, start_y + 1, depth):  # EAST
+                return True
+            elif self.find_exits(start_x - 1, start_y + 1, depth):  # NORTHEAST
+                return True
+            elif self.find_exits(start_x - 1, start_y - 1, depth):  # NORTHWEST
+                return True
+            elif self.find_exits(start_x + 1, start_y + 1, depth):  # SOUTHEAST
+                return True
+            elif self.find_exits(start_x + 1, start_y - 1, depth):  # SOUTHWEST
                 return True
 
         # If close to EXIT, try to find EXIT
         # SOUTH
-        if len(self._maze) - 2 == start_x:  # we are possibly one position BELOW to the EXIT
+        if len(self._maze) - 2 == start_x:  # we are possibly one position BELOW the EXIT
             if self._maze[start_x + 1][start_y] == PATH:
                 self._exits.append((start_x + 1, start_y))
-                # if not self._maze[start_x][start_y] == START:  # TODO: not needed; get rid of it all?
-                #      self._maze[start_x][start_y] = VISITED
                 self._maze[start_x + 1][start_y] = EXIT
 
         # NORTH
-        if start_x == 1:  # we are possibly one position ABOVE to the EXIT
+        if start_x == 1:  # we are possibly one position ABOVE the EXIT
             if self._maze[start_x - 1][start_y] == PATH:
                 self._exits.append((start_x - 1, start_y))
                 self._maze[start_x - 1][start_y] = EXIT
@@ -110,30 +117,41 @@ class Maze:
                 self._exits.append((start_x, start_y + 1))
                 self._maze[start_x][start_y + 1] = EXIT
 
+        # BASE CASES
         if self._maze[start_x][start_y] == OBSTACLE or self._maze[start_x][start_y] == EXIT:
             return False
         elif self._maze[start_x][start_y] == VISITED and not (self._maze[start_x][start_y] == START):
             return False
 
+        # mark current position as VISITED
+        # make sure not to overwrite START or EXIT
         if not (self._maze[start_x][start_y] == START) and not (self._maze[start_x][start_y] == EXIT):
             # to account for 'broad exits', i.e., >= 2 exits next to each other
-            if (self._maze[start_x][start_y] == ' ') and (start_y == 0 or start_x == 0 or len(self._maze)-1 == start_x or len(self._maze[0])-1 == start_y):
+            if (self._maze[start_x][start_y] == ' ') and \
+                    (start_y == 0 or start_x == 0 or
+                     len(self._maze) - 1 == start_x or len(self._maze[0]) - 1 == start_y):
+                self._exits.append((start_x, start_y))
                 self._maze[start_x][start_y] = EXIT
             else:
                 self._maze[start_x][start_y] = VISITED
 
-        # TODO: also move sw, se, nw, ne
-        # north
-        if self.find_exits(start_x - 1, start_y, depth):
+        # CHANGE POSITION recursively, one after another
+        # remembering old position when going back using recursion
+        if self.find_exits(start_x - 1, start_y, depth):  # NORTH
             return True
-        # south
-        if self.find_exits(start_x + 1, start_y, depth):
+        if self.find_exits(start_x + 1, start_y, depth):  # SOUTH
             return True
-        # east
-        if self.find_exits(start_x, start_y + 1, depth):
+        if self.find_exits(start_x, start_y + 1, depth):  # EAST
             return True
-        # west
-        if self.find_exits(start_x, start_y - 1, depth):
+        if self.find_exits(start_x, start_y - 1, depth):  # WEST
+            return True
+        if self.find_exits(start_x - 1, start_y + 1, depth):  # NORTHEAST
+            return True
+        if self.find_exits(start_x - 1, start_y - 1, depth):  # NORTHWEST
+            return True
+        if self.find_exits(start_x + 1, start_y + 1, depth):  # SOUTHEAST
+            return True
+        if self.find_exits(start_x + 1, start_y - 1, depth):  # SOUTHWEST
             return True
         return False
 
