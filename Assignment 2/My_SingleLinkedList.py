@@ -1,6 +1,6 @@
 class Node:
     """
-    A simple representation of a node for a singly linked list.
+    A simple representation of a node for a singly linked storage_list.
     Contains only node itself and reference to the next value.
     """
 
@@ -10,13 +10,13 @@ class Node:
 
 
 class MySingleLinkedList:
-    """A base class providing a single linked list representation."""
+    """A base class providing a single linked storage_list representation."""
 
     _myList_head = None
     _myList_tail = None
 
     def __init__(self, new_head=None, new_tail=None):
-        """Create a list and default values are None."""
+        """Create a storage_list and default values are None."""
         self._header = new_head
         self._tail = new_tail
 
@@ -33,7 +33,7 @@ class MySingleLinkedList:
 
     def prepend(self, integer_val):
         new_node = Node(integer_val)  # create new node from class
-        if self._header is None:  # if list is empty, also change tail
+        if self._header is None:  # if storage_list is empty, also change tail
             self._tail = new_node
         new_node.next_val = self._header
         self._header = new_node  # set header to new node, thereby insert it at the start

@@ -2,23 +2,23 @@ from My_ListNode import My_ListNode
 
 
 class MyDoublyLinkedList:
-    """A base class providing a doubly linked list representation."""
+    """A base class providing a doubly linked storage_list representation."""
     _myList_head = None
     _myList_tail = None
     _myList_size = 0
 
     def __init__(self, new_head=None, new_tail=None, new_size=0):
-        """Create a list and default values are None."""
+        """Create a storage_list and default values are None."""
         self._header = new_head
         self._tail = new_tail
         self._size = new_size
 
     def _len_(self):
-        """Return the number of elements in the list."""
+        """Return the number of elements in the storage_list."""
         return self._size
 
     def list_is_empty(self):
-        """Return True if list is empty."""
+        """Return True if storage_list is empty."""
         return self._size == 0
 
     def _get_header(self):
@@ -37,12 +37,12 @@ class MyDoublyLinkedList:
         new_node = My_ListNode(data=integer_val)  # instantiate new node
         if not isinstance(integer_val, int):
             raise ValueError(f"{integer_val} is not an integer!")
-        # if list is empty
+        # if storage_list is empty
         if self._header is None:
             self._header = new_node
             self._tail = new_node
             self._size += 1
-        # insert at position 0; integer_value is largest element in list
+        # insert at position 0; integer_value is largest element in storage_list
         elif self._header.data < new_node.data:
             new_node._set_next_val(self._header)
             self._header._set_prev_val(new_node)
@@ -149,7 +149,7 @@ class MyDoublyLinkedList:
             return False
 
     def remove_duplicates(self):
-        if self._header is None:  # cannot remove duplicates; list is empty
+        if self._header is None:  # cannot remove duplicates; storage_list is empty
             return None
 
         cur = self._header

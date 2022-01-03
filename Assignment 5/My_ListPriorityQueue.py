@@ -41,8 +41,8 @@ class My_ListPriorityQueue:
         return self.list.get_first()  # since first element is maximum
 
     def to_list(self):
-        """Returns a python list representation of the PQ
-        @return a python list
+        """Returns a python storage_list representation of the PQ
+        @return a python storage_list
         """
         return self.list.to_list()
 

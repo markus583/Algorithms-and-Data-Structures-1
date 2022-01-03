@@ -61,15 +61,15 @@ class MyHeapPriorityQueue:
         """
         if not isinstance(integer_val, int):
             raise ValueError(f"{integer_val} is not an integer!")
-        # Heap is empty; just insert into empty list
+        # Heap is empty; just insert into empty storage_list
         if self.size == 0:
             self.heap.append(integer_val)
             self.size += 1
         # heap not empty; up heap
         else:
-            self.heap.append(integer_val)  # append value to list --> insert 1 far right on lowest level
+            self.heap.append(integer_val)  # append value to storage_list --> insert 1 far right on lowest level
             self.size += 1  # change size
-            self.up_heap(len(self.heap) - 1)  # upheap from last element in list, i.e. integer_val
+            self.up_heap(len(self.heap) - 1)  # upheap from last element in storage_list, i.e. integer_val
 
     def is_empty(self) -> bool:
         """returns True if the max heap is empty, False otherwise
@@ -81,7 +81,7 @@ class MyHeapPriorityQueue:
         """returns the value of the maximum element of the PQ without removing it
         @return the maximum value of the PQ or None if no element exists
         """
-        # Largest element is by definition root of tree, i.e. first element in list
+        # Largest element is by definition root of tree, i.e. first element in storage_list
         if self.size != 0:  # make sure there is a root <--> tree is not empty
             return self.heap[0]
         return None

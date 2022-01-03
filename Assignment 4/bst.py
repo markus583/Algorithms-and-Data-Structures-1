@@ -288,7 +288,7 @@ class BinarySearchTree:
             return iter(())
         return postorder_recursively(node)
 
-    # this allows for e.g. `for node in tree`, or `list(tree)`.
+    # this allows for e.g. `for node in tree`, or `storage_list(tree)`.
     def __iter__(self) -> Generator[TreeNode, None, None]:
         yield from self.preorder()
 
@@ -338,10 +338,10 @@ class BinarySearchTree:
         return get_smallest_recursively(node)
 
     def find_comparison(self, key: int) -> Tuple[int, int]:
-        """Create an inbuilt python list of BST values in preorder
-        and compute the number of comparisons needed for finding the key both in the list and in the BST.
+        """Create an inbuilt python storage_list of BST values in preorder
+        and compute the number of comparisons needed for finding the key both in the storage_list and in the BST.
 
-           Return the numbers of comparisons for both, the list and the BST
+           Return the numbers of comparisons for both, the storage_list and the BST
         """
         python_list = list(node.key for node in self.preorder())  # had to change self._preorder() to self.preorder()
         py_list_comparisons = False  # in case something goes wrong
@@ -351,7 +351,7 @@ class BinarySearchTree:
                 break  # finally, stop loop
         compare = True
         tree_comparisons = self.search_bst_helper(self._root, key, compare=compare)
-        return py_list_comparisons, tree_comparisons  # tuple: python list first, then BST
+        return py_list_comparisons, tree_comparisons  # tuple: python storage_list first, then BST
 
     @property
     def height(self) -> int:
