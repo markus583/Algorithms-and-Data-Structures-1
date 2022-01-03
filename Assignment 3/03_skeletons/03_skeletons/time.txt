@@ -1,6 +1,0 @@
-#Student ID
-k12345678
-#Assignment number
-01
-#Time in minutes
-190

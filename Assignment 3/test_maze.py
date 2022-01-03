@@ -17,12 +17,12 @@ def maze() -> Maze:
 
 
 def test_find_exits(maze):
-    maze.find_exits(1, 7)
-    assert maze.exits == [(7, 0)]
+    maze.find_exits(0, 1)
+    assert maze.exits == [(5, 4)]
 
 
 def test_correct_marking(maze):
-    maze.find_exits(1, 1)
+    maze.find_exits(12, 0)
     assert str(maze) == (MAZES / 'example_maze_solution.txt').read_text()
 
 
@@ -34,6 +34,5 @@ def test_save_rec_depth(maze):
 maze_str = (MAZES / 'example_maze.txt').read_text()
 my_maze = Maze(maze_str)
 test_correct_marking(my_maze)
-test_find_exits(my_maze)
 test_save_rec_depth(my_maze)
 print('')

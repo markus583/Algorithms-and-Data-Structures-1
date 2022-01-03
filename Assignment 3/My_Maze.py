@@ -1,11 +1,11 @@
 from typing import List, Tuple
 
 # Using constants might make this more readable.
-START = 'S'
-EXIT = 'X'
-VISITED = '.'
-OBSTACLE = '#'
-PATH = ' '
+START = "S"
+EXIT = "X"
+VISITED = "."
+OBSTACLE = "#"
+PATH = " "
 
 
 class Maze:
@@ -15,12 +15,12 @@ class Maze:
         """Initialize Maze.
 
         Args:
-            maze_str (str): Maze represented by a string, 
+            maze_str (str): Maze represented by a string,
             where rows are separated by newlines (\\n).
 
         Raises:
-            ValueError, if maze_str is invalid, i.e. if it is not the correct type, 
-            if any of its dimensions is less than three, or if it contains 
+            ValueError, if maze_str is invalid, i.e. if it is not the correct type,
+            if any of its dimensions is less than three, or if it contains
             characters besides {'\\n', ' ', '*'}.
         """
         # We internally treat this as a List[List[str]], as it makes indexing easier.
@@ -29,8 +29,8 @@ class Maze:
         self._exits: List[Tuple[int, int]] = []
         self._max_recursion_depth = 0
 
-    def find_exits(self, start_x: int, start_y: int, depth: int = 0) -> None:
-        """Find and save all exits into `self._exits` using recursion, save 
+    def find_exits(self, start_x: int, start_y: int, depth: int = 0) -> bool:
+        """Find and save all exits into `self._exits` using recursion, save
         the maximum recursion depth into 'self._max_recursion_depth' and mark the maze.
 
         An exit is an accessible from S empty cell on the outer rims of the maze.
@@ -46,23 +46,22 @@ class Maze:
         # Starting position out of range
         if start_x > len(self._maze) - 1 or start_y > len(self._maze[0]) - 1 or start_y < 0 or start_x < 0:
             if depth == 0:
-                raise ValueError
-            else:
-                return False
+                raise ValueError("Starting position is out of range.")
+            return False
 
         # Position is obstacle
         if self._maze[start_x][start_y] == OBSTACLE:
             if depth == 0:
-                raise ValueError
-            else:
-                return False
+                raise ValueError("Starting position is not walkable.")
+            return False
 
         if depth == 0:
             # at the beginning, mark START
             self._maze[start_x][start_y] = START
             # CASE: start is exit
-            if (start_y == 0 or start_y == len(self._maze[0]) - 1 or
-                    start_x == 0 or start_x == len(self._maze) - 1):  # if true, we are at the edge of the maze --> exit
+            if (
+                    start_y == 0 or start_y == len(self._maze[0]) - 1 or start_x == 0 or start_x == len(self._maze) - 1
+            ):  # if true, we are at the edge of the maze --> exit
                 if self._maze[start_x][start_y] == START:
                     self._exits.append((start_x, start_y))
                     self._maze[start_x][start_y] = EXIT
@@ -77,19 +76,19 @@ class Maze:
         if self._maze[start_x][start_y] == EXIT and depth == 1:
             if self.find_exits(start_x - 1, start_y, depth):  # NORTH
                 return True
-            elif self.find_exits(start_x + 1, start_y, depth):  # SOUTH
+            if self.find_exits(start_x + 1, start_y, depth):  # SOUTH
                 return True
-            elif self.find_exits(start_x, start_y - 1, depth):  # WEST
+            if self.find_exits(start_x, start_y - 1, depth):  # WEST
                 return True
-            elif self.find_exits(start_x, start_y + 1, depth):  # EAST
+            if self.find_exits(start_x, start_y + 1, depth):  # EAST
                 return True
-            elif self.find_exits(start_x - 1, start_y + 1, depth):  # NORTHEAST
+            if self.find_exits(start_x - 1, start_y + 1, depth):  # NORTHEAST
                 return True
-            elif self.find_exits(start_x - 1, start_y - 1, depth):  # NORTHWEST
+            if self.find_exits(start_x - 1, start_y - 1, depth):  # NORTHWEST
                 return True
-            elif self.find_exits(start_x + 1, start_y + 1, depth):  # SOUTHEAST
+            if self.find_exits(start_x + 1, start_y + 1, depth):  # SOUTHEAST
                 return True
-            elif self.find_exits(start_x + 1, start_y - 1, depth):  # SOUTHWEST
+            if self.find_exits(start_x + 1, start_y - 1, depth):  # SOUTHWEST
                 return True
 
         # If close to EXIT, try to find EXIT
@@ -127,9 +126,9 @@ class Maze:
         # make sure not to overwrite START or EXIT
         if not (self._maze[start_x][start_y] == START) and not (self._maze[start_x][start_y] == EXIT):
             # to account for 'broad exits', i.e., >= 2 exits next to each other
-            if (self._maze[start_x][start_y] == ' ') and \
-                    (start_y == 0 or start_x == 0 or
-                     len(self._maze) - 1 == start_x or len(self._maze[0]) - 1 == start_y):
+            if (self._maze[start_x][start_y] == " ") and (
+                    start_y == 0 or start_x == 0 or len(self._maze) - 1 == start_x or len(self._maze[0]) - 1 == start_y
+            ):
                 self._exits.append((start_x, start_y))
                 self._maze[start_x][start_y] = EXIT
             else:
@@ -166,6 +165,6 @@ class Maze:
         return self._max_recursion_depth
 
     def __str__(self) -> str:
-        return '\n'.join(''.join(row) for row in self._maze)
+        return "\n".join("".join(row) for row in self._maze)
 
     __repr__ = __str__
